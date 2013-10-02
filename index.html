@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>web socket sample</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+        <script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row col-md-2"></div>
+            <div class="row col-md-8">
+                <div class="page-header">
+                    <ul class="nav nav-pills pull-right">
+                        <li><a href="#">Home</a></li>
+                    </ul>
+                    <h3 class="text-muted">Chat</h3>
+                </div>
+                <div class="input-group" style="margin-bottom: 30px">
+                    <input type="text" id="user-input" class="form-control">
+                    <span class="input-group-btn">
+                        <button type="button" id="say" class="btn btn-info">say</button>
+                    </span>
+                </div>
+                <div id="chat-area">
+                </div>
+            </div>
+            <div class="row col-md-2"></div>
+        </div>
+        <script>
+
+
+        var ws = new WebSocket('ws://192.168.7.11:8888/');
+
+        var userName = "guest" + Math.floor(Math.random() * 100);
+
+        $("#say").on('click', function() {
+            var mes = $("#user-input").val();
+            ws.send(JSON.stringify({
+                text: mes,
+            }));
+            $("#user-input").val("");
+        });
+
+        ws.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+            var addData = "<div class='well well-sm'>" + data.text + "</div>";
+            $("#chat-area").append(addData);
+        };
+
+        </script>
+    </body>
+</html>
